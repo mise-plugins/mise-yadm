@@ -14,7 +14,7 @@ set \
 readonly toolname="yadm"
 
 install() {
-    local -r filename="${toolname}-${ASDF_INSTALL_VERSION}.tar.gz"
+    local -r filename="${ASDF_INSTALL_VERSION}.tar.gz"
     local -r download_pkg="${ASDF_DOWNLOAD_PATH}/${filename}"
 
     echo "Extracting ${toolname} from tar archive"

@@ -21,7 +21,7 @@ then
 fi
 
 download() {
-  local -r filename="${toolname}-${ASDF_INSTALL_VERSION}.tar.gz"
+  local -r filename="${ASDF_INSTALL_VERSION}.tar.gz"
   local -r download_url="$(get_download_url "$filename")"
 
   echo "Downloading ${toolname} version ${ASDF_INSTALL_VERSION} from ${download_url}"
@@ -39,7 +39,7 @@ download() {
 get_download_url() {
   local -r filename=$1
 
-  echo "https://github.com/$repository/releases/download/${ASDF_INSTALL_VERSION}/$filename"
+  echo "https://github.com/$repository/archive/refs/tags/$filename"
 }
 
 build_header() {
