@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+set \
+  -o errexit \
+  -o nounset \
+  -o pipefail
+
+# required environment variables
+: "${ASDF_INSTALL_VERSION?}"
+: "${ASDF_DOWNLOAD_PATH?}"
+
+readonly repository="TheLocehiliosan/yadm"
+readonly toolname="yadm"
+
+# rate limit support with a proper token
+HEADERS=()
+if [ -n "${OAUTH_TOKEN:-}" ]
+then
+  header=$(build_header Authorization "token ${OAUTH_TOKEN}")
+  HEADERS+=("$header")
+fi
+
+download() {
+  local -r filename="${toolname}-${ASDF_INSTALL_VERSION}.tar.gz"
+  local -r download_url="$(get_download_url "$filename")"
+
+  echo "Downloading ${toolname} version ${ASDF_INSTALL_VERSION} from ${download_url}"
+  if curl "${HEADERS[@]/#/-H }" -fsL "${download_url}" -o "${ASDF_DOWNLOAD_PATH}/${filename}"
+  then
+    echo "Successfully downloaded ${filename}"
+    exit 0
+  else
+    echo "Failed to download ${filename}"
+    exit 1
+  fi
+}
+
+# return the full URL to the download
+get_download_url() {
+  local -r filename=$1
+
+  echo "https://github.com/$repository/releases/download/v${ASDF_INSTALL_VERSION}/$filename"
+}
+
+build_header() {
+  local key=${1}
+  local val=${2}
+
+  echo "'$key: $val'"
+}
+
+download
