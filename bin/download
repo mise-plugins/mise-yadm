@@ -39,7 +39,7 @@ download() {
 get_download_url() {
   local -r filename=$1
 
-  echo "https://github.com/$repository/releases/download/v${ASDF_INSTALL_VERSION}/$filename"
+  echo "https://github.com/$repository/releases/download/${ASDF_INSTALL_VERSION}/$filename"
 }
 
 build_header() {
