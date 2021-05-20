@@ -32,4 +32,11 @@ get_download_url() {
   echo "https://api.github.com/repos/$repository/tags"
 }
 
+build_header() {
+  local key=${1}
+  local val=${2}
+
+  echo "'$key: $val'"
+}
+
 list_all
