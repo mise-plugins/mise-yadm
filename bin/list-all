@@ -8,17 +8,16 @@ set \
 readonly repository="TheLocehiliosan/yadm"
 
 # rate limit support with a proper token
-HEADERS=()
+CURL_CMD="curl -fsL"
 if [ -n "${OAUTH_TOKEN:-}" ]
 then
-  header=$(build_header Authorization "token ${OAUTH_TOKEN}")
-  HEADERS+=("$header")
+  CURL_CMD="$CURL_CMD -H 'Authorization: token ${OAUTH_TOKEN}'"
 fi
 
 list_all() {
   local -r download_url="$(get_download_url)"
 
-  versions=$(curl "${HEADERS[@]/#/-H }" -fsL "${download_url}" | grep '\bname\b' | sed 's/"name": //g;s/"//g;s/,//g')
+  versions=$($CURL_CMD "${download_url}" | grep '\bname\b' | sed 's/"name": //g;s/"//g;s/,//g')
   echo "$versions" | sort_versions | xargs
 }
 
@@ -30,13 +29,6 @@ sort_versions() {
 # return the full URL to the download
 get_download_url() {
   echo "https://api.github.com/repos/$repository/tags"
-}
-
-build_header() {
-  local key=${1}
-  local val=${2}
-
-  echo "'$key: $val'"
 }
 
 list_all

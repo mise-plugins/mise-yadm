@@ -13,11 +13,10 @@ readonly repository="TheLocehiliosan/yadm"
 readonly toolname="yadm"
 
 # rate limit support with a proper token
-HEADERS=()
+CURL_CMD="curl -fsL"
 if [ -n "${OAUTH_TOKEN:-}" ]
 then
-  header=$(build_header Authorization "token ${OAUTH_TOKEN}")
-  HEADERS+=("$header")
+  CURL_CMD="$CURL_CMD -H 'Authorization: token ${OAUTH_TOKEN}'"
 fi
 
 download() {
@@ -25,7 +24,7 @@ download() {
   local -r download_url="$(get_download_url "$filename")"
 
   echo "Downloading ${toolname} version ${ASDF_INSTALL_VERSION} from ${download_url}"
-  if curl "${HEADERS[@]/#/-H }" -fsL "${download_url}" -o "${ASDF_DOWNLOAD_PATH}/${filename}"
+  if $CURL_CMD "${download_url}" -o "${ASDF_DOWNLOAD_PATH}/${filename}"
   then
     echo "Successfully downloaded ${filename}"
     exit 0
@@ -40,13 +39,6 @@ get_download_url() {
   local -r filename=$1
 
   echo "https://github.com/$repository/archive/refs/tags/$filename"
-}
-
-build_header() {
-  local key=${1}
-  local val=${2}
-
-  echo "'$key: $val'"
 }
 
 download
