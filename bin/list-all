@@ -5,20 +5,20 @@ set \
   -o nounset \
   -o pipefail
 
-readonly repository="TheLocehiliosan/yadm"
+readonly repository="yadm-dev/yadm"
 
 # rate limit support with a proper token
 CURL_CMD="curl -fsL"
-if [ -n "${OAUTH_TOKEN:-}" ]
+if [ -n "${GITHUB_TOKEN:-}" ]
 then
-  CURL_CMD="$CURL_CMD -H 'Authorization: token ${OAUTH_TOKEN}'"
+  CURL_CMD="$CURL_CMD -H 'Authorization: token ${GITHUB_TOKEN}'"
 fi
 
 list_all() {
   local -r download_url="$(get_download_url)"
 
   versions=$($CURL_CMD "${download_url}" | grep '\bname\b' | sed 's/"name": //g;s/"//g;s/,//g')
-  echo "$versions" | sort_versions | xargs
+  echo "$versions" | sort_versions
 }
 
 sort_versions() {
