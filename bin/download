@@ -9,7 +9,7 @@ set \
 : "${ASDF_INSTALL_VERSION?}"
 : "${ASDF_DOWNLOAD_PATH?}"
 
-readonly repository="TheLocehiliosan/yadm"
+readonly repository="yadm-dev/yadm"
 readonly toolname="yadm"
 
 # rate limit support with a proper token
